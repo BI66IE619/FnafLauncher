@@ -1,11 +1,10 @@
-let steamlinks = [];
 let htmllinks = [];
 fetch("assets/jsons/games.json").then((response) => response.json()).then((data) => {
     let tileCount = 0;
     data.forEach((game) => {
         let container = document.querySelector(".cards-section");
         let gameimages = "assets/images/" + game.detail + "/";
-        let tile = tileCount
+        let tile = tileCount;
 
         const cardcontainer = document.createElement("div");
         cardcontainer.className = "game-card game" + tileCount;
@@ -30,9 +29,37 @@ fetch("assets/jsons/games.json").then((response) => response.json()).then((data)
         cardtitle.src = gameimages + "title.png";
 
         const playdiv = document.createElement("a");
-        playdiv.addEventListener("click", () => {
+        // compute per-game HTML link placeholder:
+        // - prefer the link from games.json (game.links[1]) if provided
+        // - otherwise create a default placeholder file path (e.g. games/game1.html)
+        const htmlLink = (game.links && game.links[1]) ? game.links[1] : `games/game${tileCount + 1}.html`;
+
+        // store the html link on the element and push into the htmllinks array
+        playdiv.href = "javascript:void(0)";
+        playdiv.dataset.url = htmlLink;
+
+        playdiv.addEventListener("click", (e) => {
+            // prevent the click from bubbling to the card container
+            e.preventDefault();
+            e.stopPropagation();
+
+            // if launcher is 'off', keep the existing deactivator behavior
+            if (launcherSHO === 'off') {
+                deactivator();
+                return;
+            }
+
+            const url = playdiv.dataset.url || htmllinks[tile];
+            if (url) {
+                // open in same tab; change to "_blank" if you want a new tab
+                window.open(url, "_self");
+                return;
+            }
+
+            // fallback behavior if no url available
             deactivator();
         });
+
         const playbutton = document.createElement("button");
         playbutton.className = "play-button";
         playbutton.role = "button";
@@ -46,8 +73,10 @@ fetch("assets/jsons/games.json").then((response) => response.json()).then((data)
         cardcontainer.appendChild(cardtitlediv);
         cardcontainer.appendChild(playdiv);
         container.appendChild(cardcontainer);
-        steamlinks.push(game.links[0]);
-        htmllinks.push(game.links[1]);
+
+        // push the html link placeholder we computed
+        htmllinks.push(htmlLink);
+
         tileCount++;
     });
 });
@@ -86,13 +115,13 @@ const options = document.querySelector('.launcher-options');
 const musicIcon = document.querySelector('.music');
 const soundIcon = document.querySelector('.sound');
 
-if (!launcherSHO) { launcherSHO = 'steam'; localStorage.setItem(launcherKey, launcherSHO); }
+// default to html launcher (no steam behavior)
+if (!launcherSHO) { launcherSHO = 'html'; localStorage.setItem(launcherKey, launcherSHO); }
 if (!playMusic) { playMusic = 'true'; localStorage.setItem(musicKey, playMusic); }
 if (!playSound) { playSound = 'true'; localStorage.setItem(soundKey, playSound); }
 
 if (launcherSHO === 'off') { options.src = 'assets/images/icons/launcher-off.svg'; }
 if (launcherSHO === 'html') { options.src = 'assets/images/icons/launcher-html.svg'; }
-if (launcherSHO === 'steam') { options.src = 'assets/images/icons/launcher-steam.svg'; }
 if (playMusic === 'true') { musicIcon.src = 'assets/images/icons/music.svg'; }
 if (playMusic === 'false') { musicIcon.src = 'assets/images/icons/music-off.svg'; }
 if (playSound === 'true') { soundIcon.src = 'assets/images/icons/sound.svg'; }
@@ -136,12 +165,48 @@ function deactivator() {
 }
 
 document.addEventListener('keydown', function (event) {
-    if (inMenu === false && event.keyCode == 37) { if (left === true) { gameSelection('left') } if (left === false) { if (playSound === 'true') { error.currentTime = 0; error.play(); } } if (currentIndex - 1 < 0) { left = false; } right = true }
-    if (inMenu === false && event.keyCode == 39) { if (right === true) { gameSelection('right') } if (right === false) { if (playSound === 'true') { error.currentTime = 0; error.play(); } } if (currentIndex + 1 > 10) { right = false; } left = true }
-    if (inMenu === false && event.keyCode == 40) { if (down === true) { playButtonHover(true); } if (down === false) { if (playSound === 'true') { error.currentTime = 0; error.play(); } } down = false; up = true }
-    if (inMenu === false && event.keyCode == 38) { if (up === true) { playButtonHover(); } if (up === false) { if (playSound === 'true') { error.currentTime = 0; error.play(); } } up = false; down = true }
-    if (event.keyCode == 13) { if (inMenu === true) { activator(); } if (inMenu === false && hovering === true) { if (launcherSHO === 'steam') { window.open(steamlinks[currentIndex], "_self"); } if (launcherSHO === 'html') { window.open(htmllinks[currentIndex], "_self"); } if (launcherSHO === 'off') { } deactivator() } }
-    if (inMenu === false && event.keyCode == 32) { if (hovering === true) { if (launcherSHO === 'steam') { window.open(steamlinks[currentIndex], "_self"); } if (launcherSHO === 'html') { window.open(htmllinks[currentIndex], "_self"); } if (launcherSHO === 'off') { } deactivator() } }
+    if (inMenu === false && event.keyCode == 37) {
+        if (left === true) { gameSelection('left'); }
+        else { if (playSound === 'true') { error.currentTime = 0; error.play(); } }
+    }
+    if (inMenu === false && event.keyCode == 39) {
+        if (right === true) { gameSelection('right'); }
+        else { if (playSound === 'true') { error.currentTime = 0; error.play(); } }
+    }
+    if (inMenu === false && event.keyCode == 40) {
+        if (down === true) { playButtonHover(true); }
+        else { if (playSound === 'true') { error.currentTime = 0; error.play(); } }
+        down = false; up = true; left = false; right = false;
+    }
+    if (inMenu === false && event.keyCode == 38) {
+        if (up === true) { playButtonHover(); }
+        else { if (playSound === 'true') { error.currentTime = 0; error.play(); } }
+        up = false; down = true; left = false; right = true;
+    }
+    if (event.keyCode == 13) {
+        if (inMenu === true) { activator(); }
+        else if (inMenu === false && hovering === true) {
+            // open per-card HTML when Enter is pressed while hovering (only if not 'off')
+            if (launcherSHO !== 'off') {
+                const url = htmllinks[currentIndex];
+                if (url) { window.open(url, "_self"); }
+                else { deactivator(); }
+            } else {
+                deactivator();
+            }
+        }
+    }
+    if (inMenu === false && event.keyCode == 32) {
+        if (hovering === true) {
+            if (launcherSHO !== 'off') {
+                const url = htmllinks[currentIndex];
+                if (url) { window.open(url, "_self"); }
+                else { deactivator(); }
+            } else {
+                deactivator();
+            }
+        }
+    }
     if (inMenu === false && event.keyCode == 27) { deactivate = true; deactivator(); }
 })
 
@@ -161,10 +226,10 @@ function playButtonHover(cancel) {
 }
 
 function launcherOptions() {
-    if (launcherSHO === 'steam') { launcherSHO = 'off'; options.src = 'assets/images/icons/launcher-off.svg'; }
-    else if (launcherSHO === 'off') { launcherSHO = 'html'; options.src = 'assets/images/icons/launcher-html.svg'; }
-    else if (launcherSHO === 'html') { launcherSHO = 'steam'; options.src = 'assets/images/icons/launcher-steam.svg'; }
-    localStorage.setItem(launcherKey, launcherSHO)
+    // toggle only between 'off' and 'html' (steam removed)
+    if (launcherSHO === 'off') { launcherSHO = 'html'; options.src = 'assets/images/icons/launcher-html.svg'; }
+    else if (launcherSHO === 'html') { launcherSHO = 'off'; options.src = 'assets/images/icons/launcher-off.svg'; }
+    localStorage.setItem(launcherKey, launcherSHO);
     changeGameSelected(currentIndex);
 }
 
@@ -226,9 +291,17 @@ function changeGameSelected(index) {
     if (index - 10 > -1) { cardSelector[index - 10].classList.add('scale10'); }
     if (index + 10 < 11) { cardSelector[index + 10].classList.add('scale10'); }
 
-    if (launcherSHO === 'off') { cardSelectorSource.forEach(card => card.href = 'javascript:void(0)'); deactivate = false; }
-    if (launcherSHO === 'html') { cardSelectorSource[index].href = htmllinks[index]; deactivate = false; }
-    if (launcherSHO === 'steam') { cardSelectorSource[index].href = steamlinks[index]; deactivate = true; }
+    // set anchors so the selected card points to its per-card HTML link (or disabled when off)
+    if (cardSelectorSource && cardSelectorSource.length) {
+        cardSelectorSource.forEach(card => card.href = 'javascript:void(0)');
+        if (launcherSHO === 'html') {
+            cardSelectorSource[index].href = htmllinks[index] || 'javascript:void(0)';
+            deactivate = false;
+        } else {
+            // launcherSHO === 'off'
+            deactivate = false;
+        }
+    }
 
     const cardsSection = document.querySelector('.cards-section');
     const selectedCard = cardsSection.children[index];
