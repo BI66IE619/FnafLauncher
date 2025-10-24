@@ -6,7 +6,7 @@
         "cch": "FNAF1HTML5.cch",
         "color": "linear-gradient(to top, rgba(66, 60, 54, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/319510",
+            "",
             "loader.html?game=1"
         ]
     },
@@ -17,7 +17,7 @@
         "cch": "FiveNights2NOHACKS.cch",
         "color": "linear-gradient(to top, rgba(164, 55, 30, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/332800",
+            "",
             "loader.html?game=2"
         ]
     },
@@ -28,7 +28,7 @@
         "cch": "fnaf 3.cch",
         "color": "linear-gradient(to top, rgba(102, 99, 15, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/354140",
+            "",
             "loader.html?game=3"
         ]
     },
@@ -39,7 +39,7 @@
         "cch": "fnaf 4.cch",
         "color": "linear-gradient(to top, rgba(104, 5, 5, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/388090",
+            "",
             "loader.html?game=4"
         ]
     },
@@ -50,7 +50,7 @@
         "cch": "fnafw.cch",
         "color": "linear-gradient(to top, rgba(8, 85, 15, 0.8) 0%, transparent 40%)",
         "links": [
-            "javascript:alert('Sorry! We have not added a way to launch FNAF World yet...')",
+            "",
             "loader.html?game=5"
         ]
     },
@@ -61,7 +61,7 @@
         "cch": "fnafsl.cch",
         "color": "linear-gradient(to top, rgba(53, 8, 142, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/506610",
+            "",
             "loader.html?game=6"
         ]
     },
@@ -72,7 +72,7 @@
         "cch": "fnafps.cch",
         "color": "linear-gradient(to top, rgba(152, 5, 128, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/738060",
+            "",
             "loader.html?game=7"
         ]
     },
@@ -83,7 +83,7 @@
         "cch": "UCNHTML5.cch",
         "color": "linear-gradient(to top, rgba(40, 15, 15, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/871720",
+            "",
             "loader.html?game=8"
         ]
     },
@@ -94,7 +94,7 @@
         "cch": "",
         "color": "linear-gradient(to top, rgba(19, 71, 110, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/732690",
+            "",
             "javascript:alert('Sorry! Help Wanted 1 is not possbile in web browser...')"
         ]
     },
@@ -105,7 +105,7 @@
         "cch": "",
         "color": "linear-gradient(to top, rgba(210, 44, 215, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/747660",
+            "",
             "javascript:alert('Sorry! Security Breach is not possbile in web browser...')"
         ]
     },
@@ -116,7 +116,7 @@
         "cch": "",
         "color": "linear-gradient(to top, rgba(88, 13, 146, 0.8) 0%, transparent 40%)",
         "links": [
-            "steam://run/2287520",
+            "",
             "javascript:alert('Sorry! Help Wanted 2 is not possbile in web browser...')"
         ]
     }
